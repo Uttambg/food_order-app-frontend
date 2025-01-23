@@ -3,13 +3,16 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;;
 
 export const useGetMyUser = () => {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0(); 
 
   const getMyUserRequest = async (): Promise<User> => {
     const accessToken = await getAccessTokenSilently();
+    console.log('Access Token:', accessToken);
+
+    
 
     const response = await fetch(`${API_BASE_URL}/api/my/user`, {
       method: "GET",
@@ -20,7 +23,7 @@ export const useGetMyUser = () => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch user");
+      throw new Error(`Failed to fetch user: ${response.status}`);
     }
 
     return response.json();
@@ -47,8 +50,11 @@ type CreateUserRequest = {
 export const useCreateMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
 
+  console.log("Access Token:", getAccessTokenSilently);
+
   const createMyUserRequest = async (user: CreateUserRequest) => {
     const accessToken = await getAccessTokenSilently();
+    console.log("Access Token:", accessToken);
     const response = await fetch(`${API_BASE_URL}/api/my/user`, {
       method: "POST",
       headers: {
